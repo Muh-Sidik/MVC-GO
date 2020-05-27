@@ -14,7 +14,8 @@ type Configurations struct {
 
 func GetConfig() Configurations {
 	config := Configurations{}
-	err := gonfig.GetConf("config/config.json", &config)
+	err := gonfig.GetConf("config/configMysql.json", &config)
+	// err := gonfig.GetConf("config/configPostgres.json", &config)
 
 	if err != nil {
 		panic(err)
