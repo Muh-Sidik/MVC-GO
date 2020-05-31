@@ -1,12 +1,11 @@
 package database
 
 import (
-	"github.com/gocrud/database"
 	"github.com/gocrud/database/models"
 )
 
 func MigrationTable() {
-	db := database.InitDB()
+	db := InitDB()
 
 	defer db.Close()
 
