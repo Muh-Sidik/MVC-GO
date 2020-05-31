@@ -36,7 +36,7 @@ func Init() *echo.Echo {
 
 	e.GET("/user", app.AllUsers)
 	e.POST("/user/:name/:email", app.StoreUser)
-
+	e.POST("/login", app.Login)
 	//
 	return e
 }
