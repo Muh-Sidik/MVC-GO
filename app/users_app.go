@@ -6,7 +6,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gocrud/database"
-	"github.com/gocrud/models"
+	"github.com/gocrud/database/models"
 	"github.com/labstack/echo/v4"
 )
 
