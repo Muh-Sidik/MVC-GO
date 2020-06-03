@@ -6,10 +6,16 @@ import (
 	"github.com/gocrud/app"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	// "golang.org/x/crypto/acme/autocert"
 )
 
 func Init() *echo.Echo {
 	e := echo.New()
+
+	//host list
+	// e.AutoTLSManager.HostPolicy = autocert.HostWhitelist("<DOMAIN>")
+	// Cache certificates
+	// e.AutoTLSManager.Cache = autocert.DirCache("/var/www/.cache")
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
