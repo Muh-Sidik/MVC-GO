@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/gocrud/database/models"
+	"github.com/MVC/database/models"
 )
 
 func MigrationTable() {

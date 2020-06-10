@@ -4,9 +4,10 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/MVC/database"
+	"github.com/MVC/database/models"
+	"github.com/MVC/database/models/response"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gocrud/database"
-	"github.com/gocrud/database/models"
 	"github.com/labstack/echo/v4"
 )
 
@@ -17,7 +18,7 @@ func AllUsers(c echo.Context) error {
 
 	defer db.Close()
 
-	var res models.Response
+	var res response.Response
 	var users []models.UsersTable
 
 	db.Find(&users)
