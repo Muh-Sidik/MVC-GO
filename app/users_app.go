@@ -14,9 +14,7 @@ import (
 
 var db = database.InitDB()
 
-type ErrorResponse struct {
-	Info string
-}
+type ErrorResponse response.ErrorResponse
 
 func AllUsers(c echo.Context) error {
 
