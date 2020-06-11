@@ -4,6 +4,6 @@ import "github.com/jinzhu/gorm"
 
 type UsersTable struct {
 	gorm.Model
-	Name  string
-	Email string
+	Username string
+	Password string
 }
