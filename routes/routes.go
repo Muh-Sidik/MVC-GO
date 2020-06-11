@@ -39,12 +39,12 @@ func Init() *echo.Echo {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hai :v")
 	})
+	e.POST("/login", app.Login)
+	e.POST("/user/:name/:email", app.Register)
 
 	// user authorized
 	// e.Use(auth.JwtVerify)
 	e.GET("/user", app.AllUsers)
-	e.POST("/user/:name/:email", app.StoreUser)
-	e.POST("/login", app.Login)
 	//
 	return e
 }

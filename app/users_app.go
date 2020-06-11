@@ -1,20 +1,24 @@
 package app
 
 import (
+	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/MVC/database"
 	"github.com/MVC/database/models"
 	"github.com/MVC/database/models/response"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/MVC/utils/auth"
 	"github.com/labstack/echo/v4"
+	"golang.org/x/crypto/bcrypt"
 )
 
-func AllUsers(c echo.Context) error {
-	// database.InitDB()
+var db = database.InitDB()
 
-	db := database.InitDB()
+type ErrorResponse struct {
+	Info string
+}
+
+func AllUsers(c echo.Context) error {
 
 	defer db.Close()
 
@@ -29,50 +33,85 @@ func AllUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-func StoreUser(c echo.Context) error {
-	db := database.InitDB()
+func Register(c echo.Context) error {
 
 	defer db.Close()
 
-	name := c.Param("name")
-	email := c.Param("email")
+	var res response.Response
 
-	db.Create(&models.UsersTable{Name: name, Email: email})
+	username := c.Param("username")
+	password := c.Param("password")
 
-	return c.JSON(http.StatusCreated, map[string]string{"message": "New User is Created!"})
+	pass, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+
+	if err != nil {
+		fmt.Println(err)
+		err := ErrorResponse{
+			Info: "Password Encryption Failed!",
+		}
+
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	createdUser := db.Create(&models.UsersTable{
+		Username: username,
+		Password: string(pass),
+	})
+
+	var errMessage = createdUser.Error
+
+	if errMessage != nil {
+		fmt.Println(errMessage)
+	}
+
+	res.Status = http.StatusCreated
+	res.Message = "Register Success!"
+	res.Data = createdUser
+
+	return c.JSON(http.StatusCreated, res)
+
 }
 
 func Login(c echo.Context) error {
-	db := database.InitDB()
-
 	defer db.Close()
 
-	nameForm := c.FormValue("name")
-	emailForm := c.FormValue("email")
+	username := c.FormValue("username")
+	password := c.FormValue("passsword")
 
-	var user models.UsersTable
+	res := auth.FindUser(username, password)
 
-	db.Where("name = ?", nameForm).Where("email = ?", emailForm).Find(&user)
-
-	if nameForm != user.Name || emailForm != user.Email {
-		return echo.ErrUnauthorized
-	} else {
-		token := jwt.New(jwt.SigningMethodHS256)
-
-		claims := token.Claims.(jwt.MapClaims)
-		claims["name"] = user.Name
-		claims["email"] = user.Email
-		claims["expired"] = time.Now().Add(time.Hour * 72).Unix()
-
-		t, err := token.SignedString([]byte("hai"))
-
-		if err != nil {
-			return err
-		}
-
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"token": t,
-			"data":  claims,
-		})
-	}
+	return c.JSON(http.StatusOK, res)
 }
+
+// func Login2(c echo.Context) error {
+// 	defer db.Close()
+
+// 	nameForm := c.FormValue("username")
+// 	passForm := c.FormValue("password")
+
+// 	var user models.UsersTable
+
+// 	db.Where("username = ?", nameForm).Where("pass = ?", emailForm).Find(&user)
+
+// 	if nameForm != user.Name || emailForm != user.Email {
+// 		return echo.ErrUnauthorized
+// 	} else {
+// 		token := jwt.New(jwt.SigningMethodHS256)
+
+// 		claims := token.Claims.(jwt.MapClaims)
+// 		claims["name"] = user.Name
+// 		claims["email"] = user.Email
+// 		claims["expired"] = time.Now().Add(time.Hour * 72).Unix()
+
+// 		t, err := token.SignedString([]byte("hai"))
+
+// 		if err != nil {
+// 			return err
+// 		}
+
+// 		return c.JSON(http.StatusOK, map[string]interface{}{
+// 			"token": t,
+// 			"data":  claims,
+// 		})
+// 	}
+// }
