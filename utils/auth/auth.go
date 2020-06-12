@@ -54,8 +54,6 @@ func JwtVerify(next echo.HandlerFunc) echo.HandlerFunc {
 }
 
 func FindUser(username, password string) map[string]interface{} {
-	defer db.Close()
-
 	var user models.UsersTable
 
 	err := db.Where("username = ?", username).First(&user).Error
@@ -71,7 +69,7 @@ func FindUser(username, password string) map[string]interface{} {
 
 	expiredAt := time.Now().Add(time.Minute * 100000).Unix()
 
-	errPass := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	errPass := bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password))
 
 	if errPass != nil && errPass == bcrypt.ErrMismatchedHashAndPassword {
 		var res = map[string]interface{}{

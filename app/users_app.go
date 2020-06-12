@@ -37,8 +37,8 @@ func Register(c echo.Context) error {
 
 	var res response.Response
 
-	username := c.Param("username")
-	password := c.Param("password")
+	username := c.FormValue("username")
+	password := c.FormValue("password")
 
 	pass, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 

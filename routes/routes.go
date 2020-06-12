@@ -40,7 +40,7 @@ func Init() *echo.Echo {
 		return c.String(http.StatusOK, "Hai :v")
 	})
 	e.POST("/login", app.Login)
-	e.POST("/user/:name/:email", app.Register)
+	e.POST("/register", app.Register)
 
 	// user authorized
 	// e.Use(auth.JwtVerify)
