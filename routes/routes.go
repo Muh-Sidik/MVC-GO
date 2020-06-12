@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/MVC/app"
+	"github.com/MVC/utils/auth"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	// "golang.org/x/crypto/acme/autocert"
@@ -44,7 +45,7 @@ func Init() *echo.Echo {
 
 	// user authorized
 	// e.Use(auth.JwtVerify)
-	e.GET("/user", app.AllUsers)
+	e.GET("/user", app.AllUsers, auth.JwtVerify)
 	//
 	return e
 }

@@ -17,9 +17,6 @@ var db = database.InitDB()
 type ErrorResponse response.ErrorResponse
 
 func AllUsers(c echo.Context) error {
-
-	defer db.Close()
-
 	var res response.Response
 	var users []models.UsersTable
 
@@ -32,9 +29,6 @@ func AllUsers(c echo.Context) error {
 }
 
 func Register(c echo.Context) error {
-
-	defer db.Close()
-
 	var res response.Response
 
 	username := c.FormValue("username")
@@ -71,8 +65,6 @@ func Register(c echo.Context) error {
 }
 
 func Login(c echo.Context) error {
-	defer db.Close()
-
 	username := c.FormValue("username")
 	password := c.FormValue("passsword")
 
